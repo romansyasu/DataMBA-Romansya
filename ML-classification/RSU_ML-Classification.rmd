@@ -1,0 +1,100 @@
+---
+title: "Machine Learning II (Classification)"
+author : "Romansya"
+output: html_notebook
+---
+
+# **Intro**
+From the [dataset](https://github.com/arikunco/machinelearning/blob/master/dataset/HR_comma_sep.csv), we will try to make classification models to predict whether the employee going to leave or stay.
+
+# **Importing Libraries and Reading the dataset**
+```{r}
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+
+data <- read.csv('https://raw.githubusercontent.com/arikunco/machinelearning/master/dataset/HR_comma_sep.csv')
+
+summary(data)
+```
+
+## Data Preparation
+In the dataset, the employee left is marked as '1'.
+We're going to convert the numeric data into factor
+```{r}
+data$Work_accident<-as.factor(data$Work_accident)
+data$promotion_last_5years<-as.factor(data$promotion_last_5years)
+data$sales<-as.factor(data$sales)
+data$salary<-as.factor(data$salary)
+data$left <- as.factor(data$left)
+```
+
+Let's see the summary again
+```{r}
+summary(data)
+```
+Looking good.
+
+# **Modelling**
+We're now going to make the classification models.
+
+## Train-Test Split
+```{r}
+idxs <- sample(1:nrow(data),as.integer(0.7*nrow(data)))
+trainData <- data[idxs,]
+testData <- data[-idxs,]
+```
+
+## Decision Tree
+
+### Tree and confusion matrix
+```{r}
+tree <- rpart(left ~ ., data = data.frame(trainData), method = "class")
+predict(tree, data.frame(testData),type="class" )
+table(testData[,'left'],predict(tree, data.frame(testData),type="class"))
+```
+
+```{r}
+rpart.plot(tree, box.palette="RdBu", shadow.col="royalblue", nn=TRUE,roundint=FALSE)
+
+```
+
+
+### Metrics
+```{r}
+tab<-table(testData[,'left'],predict(tree, data.frame(testData),type="class"))
+XX<-tab[1,1]
+XY<-tab[2,1]
+YX<-tab[1,2]
+YY<-tab[2,2]
+acc_tree<-(XX+YY)/(XX+XY+YX+YY)
+rec_tree<-YY/(YY+XY)
+cat(paste(c("Accuracy:", as.character(acc_tree),"\nRecall:",as.character(rec_tree))))
+```
+
+## Random Forest
+
+### Random Forest and Confusion Matrix
+```{r}
+ranFor <- randomForest(left ~ ., data = data.frame(trainData), ntree=100, importance = TRUE)
+predict(ranFor, data.frame(testData),type="class")
+table(testData[,'left'],predict(ranFor, data.frame(testData), type="class"))
+```
+
+### Metrics
+```{r}
+tab2<-table(testData[,'left'],predict(ranFor, data.frame(testData),type="class"))
+AA<-tab2[1,1]
+AB<-tab2[2,1]
+BA<-tab2[1,2]
+BB<-tab2[2,2]
+acc_ranFor<-(AA+BB)/(AA+AB+BA+BB)
+rec_ranFor<-BB/(AB+BB)
+cat(paste(c("Accuracy:", as.character(acc_ranFor),"\nRecall:",as.character(rec_ranFor))))
+```
+
+# **Conclusion**
+By looking at the metrics, the better classification model is Random Forest.
+
+## Why?
+Random Forest consist of n-number of Decision Trees.
