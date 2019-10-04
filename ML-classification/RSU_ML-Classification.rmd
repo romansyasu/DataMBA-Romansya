@@ -5,7 +5,7 @@ output: html_notebook
 ---
 
 # **Intro**
-From the [dataset](https://github.com/arikunco/machinelearning/blob/master/dataset/HR_comma_sep.csv), we will try to make classification models to predict whether the employee going to leave or stay.
+From the [dataset](https://github.com/arikunco/machinelearning/blob/master/dataset/HR_comma_sep.csv), we will try to make classification models, Decision Tree and Random Forest, to predict whether the employee going to leave or stay.
 
 # **Importing Libraries and Reading the dataset**
 ```{r}
