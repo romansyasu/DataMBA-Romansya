@@ -8,10 +8,10 @@ library(rtweet)
 
 # API Authorization
 token <- create_token(
-  consumer_key = "k58rVqg3TkK3YjbUbkgmVbUWS",
-  consumer_secret = "QhBAcpJE6mZhItrupnUfogsjiwvfb0NjMY9eoO8wg90B7oQb0R",
-  access_token = "572353124-UAP995yM3IDTpzG6ps9NanEtlhQOakoMQRkudPbY",
-  access_secret = "oW121PWyFHZwFHG16qtF1lk3tFMzeJxYIptH6Zku2WxBI"
+  consumer_key = "secret",
+  consumer_secret = "secret",
+  access_token = "secret",
+  access_secret = "secret"
 )
 
 # Crawling Data from Twitter
